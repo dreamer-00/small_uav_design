@@ -11,6 +11,7 @@ class MsgState:
         self.phi=phi
         self.theta=theta
         self.psi=psi
+    
 def rotation_x(phi):
     c, s = np.cos(phi), np.sin(phi)
     return np.array([[1, 0, 0], [0, c, -s], [0, s, c]])
@@ -74,6 +75,7 @@ class MavViewer:
         self.ax.grid(True)
         for pane in (self.ax.xaxis.pane, self.ax.yaxis.pane, self.ax.zaxis.pane):
             pane.set_alpha(0.5)
+        self.ax.invert_zaxis()
         self.ax.view_init(elev=self.elev, azim=self.azim)
     def _world_points(self, state:MsgState):
         R=rotation_z(state.psi) @ rotation_y(state.theta) @ rotation_x(state.phi)
@@ -96,7 +98,7 @@ class MavViewer:
             xmax, ymax, zmax = world_points.max(axis=1)+pad
         self.ax.set_xlim(xmin, xmax)
         self.ax.set_ylim(ymin, ymax)
-        self.ax.set_zlim(zmin, zmax)
+        self.ax.set_zlim(zmax, zmin)
         if title:
             self.ax.set_title(title)
     @staticmethod
